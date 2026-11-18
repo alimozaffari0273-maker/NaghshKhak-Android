@@ -1,4 +1,3 @@
-
 name: Build NaghshKhak APK
 
 on:
@@ -25,12 +24,17 @@ jobs:
         with:
           gradle-version: '8.7'
 
+      - name: Extract Android project
+        run: |
+          mkdir -p project
+          unzip -o NaghshKhak_Android_Project.zip -d project
+
       - name: Build debug APK
-        run: gradle assembleDebug
+        run: gradle -p project assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: NaghshKhak-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: project/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
