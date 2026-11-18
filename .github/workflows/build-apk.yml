@@ -27,11 +27,17 @@ jobs:
 
       - name: Build APK
         run: |
-          cd extracted/NaghshKhak_Android_Project
-          gradle assembleDebug
+          GRADLEW=$(find extracted -name gradlew -type f | head -n 1)
+          if [ -z "$GRADLEW" ]; then
+            echo "gradlew not found"
+            exit 1
+          fi
+          cd "$(dirname "$GRADLEW")"
+          chmod +x gradlew
+          ./gradlew assembleDebug Build APK
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: NaghshKhak-APK
-          path: extracted/NaghshKhak_Android_Project/app/build/outputs/apk/debug/*.apk
+          path: extracted/**/app/build/outputs/apk/debug/app-debug.apk
